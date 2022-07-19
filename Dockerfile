@@ -8,6 +8,6 @@ RUN apt-get update && \
 
 COPY files/entrypoint /
 
-EXPOSE 8000
+EXPOSE 22
 
 ENTRYPOINT ["/entrypoint"]

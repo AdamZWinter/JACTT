@@ -6,9 +6,9 @@ pipeline {
         TF_LOG_PATH='/home/jenkins/terraform-debug.log'
         CONTAINER_REGISTRY='arcticacr'
         RESOURCE_GROUP='crrg'
-        REPO='sftp01'
-        IMAGE_NAME='sftptest'
-        TAG='0.03'
+        REPO='jact'
+        IMAGE_NAME='template'
+        TAG='0.01'
         CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
     }
     
@@ -21,7 +21,6 @@ pipeline {
                 withCredentials([
                     usernamePassword(credentialsId: 'sftpServicePrincipalCreds', passwordVariable: 'TF_VAR_clientsecret', usernameVariable: 'TF_VAR_clientid'),
                     usernamePassword(credentialsId: 'AzureTenantSubscription', passwordVariable: 'TF_VAR_tenantid', usernameVariable: 'TF_VAR_subscriptionid'),
-                    usernamePassword(credentialsId: 'ArcticaCRcreds', passwordVariable: 'CR_PASSWORD', usernameVariable: 'CR_USERNAME'),
                     usernamePassword(credentialsId: 'passwordtestCreds', passwordVariable: 'TEST_PASSWORD', usernameVariable: 'TEST_USERNAME')
                 ]) {
                     //script{
@@ -29,6 +28,7 @@ pipeline {
                     //env.AZURE_TENANT_ID = env.TF_VAR_tenantid
                     //}
                      
+                    //You can build the image on the Azure servers this way, if you want.
                     //sh 'az login --service-principal -u $TF_VAR_clientid -p $TF_VAR_clientsecret -t $TF_VAR_tenantid'
                     //sh 'az account set -s $TF_VAR_subscriptionid'
                     //sh 'az acr login --name $CONTAINER_REGISTRY --resource-group $RESOURCE_GROUP'
@@ -36,8 +36,8 @@ pipeline {
                     //sh 'az logout'
                     
                     sh 'az login --service-principal -u $TF_VAR_clientid -p $TF_VAR_clientsecret -t $TF_VAR_tenantid'
-                    //sh 'az account set -s $TF_VAR_subscriptionid'
-                    //sh 'az acr login --name $CONTAINER_REGISTRY --resource-group $RESOURCE_GROUP'
+                    //sh 'az account set -s $TF_VAR_subscriptionid'                                     //not necessary
+                    //sh 'az acr login --name $CONTAINER_REGISTRY --resource-group $RESOURCE_GROUP'     //not necessary
                     sh 'az acr login --name $CONTAINER_REGISTRY'
                     sh 'docker push ${CONTAINER}'
                     sh 'az logout'
