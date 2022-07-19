@@ -10,7 +10,7 @@ pipeline {
         REPO='jactt'
         IMAGE_NAME='template'
         TAG='0.01'
-        CONTAINER='${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}'
+        CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
         NETWORKPART='10.127'
     }
     
