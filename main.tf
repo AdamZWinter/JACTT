@@ -15,7 +15,7 @@ provider "azurerm" {
   tenant_id       = var.tenantid
   features {
     resource_group {
-      prevent_deletion_if_contains_resources = false
+      //prevent_deletion_if_contains_resources = false
     }
   }
 }
