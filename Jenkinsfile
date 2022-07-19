@@ -11,7 +11,7 @@ pipeline {
         IMAGE_NAME='template'
         TAG='0.01'
         CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
-        TF_VAR_NETWORKPART='10.127'
+        TF_VAR_networkpart='10.127'
     }
     
     stages {
