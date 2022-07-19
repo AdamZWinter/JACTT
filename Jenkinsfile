@@ -5,7 +5,7 @@ pipeline {
         //TF_LOG='DEBUG'
         TF_LOG_PATH='/home/jenkins/terraform-debug.log'
         //Keep these all in lowercase
-        CONTAINER_REGISTRY='arcticacr'
+        CONTAINER_REGISTRY='arctica'
         RESOURCE_GROUP='jactt'
         REPO='jactt'
         IMAGE_NAME='template'
