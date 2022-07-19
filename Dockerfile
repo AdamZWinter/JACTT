@@ -4,7 +4,8 @@ MAINTAINER Adam Z Winter
 # Steps done in one RUN layer:
 # - Install packages
 RUN apt-get update && \
-    apt-get -y install openssh-server
+    apt-get -y install openssh-server && \
+    mkdir -p /var/run/sshd
 
 COPY files/entrypoint /
 

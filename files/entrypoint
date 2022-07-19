@@ -10,20 +10,21 @@ if [ -n "$USER1" ]; then
     username="${userargs[0]}"
     password="${userargs[1]}"
 
-    log "adding user"
+    echo "adding user"
     useradd -m "$username"
     echo "$username:$password" | chpasswd
+    echo "USER1 added"
     chown root:root "/home/$username"
     chmod 755 "/home/$username"
     usermod -aG ssh -d /home "$username"    
 fi
 
 if [ -n "$USER2" ]; then
-	IFS=':' read -ra userargs <<< "$USER1"
+	IFS=':' read -ra userargs <<< "$USER2"
     username="${userargs[0]}"
     password="${userargs[1]}"
 
-    log "adding user"
+    echo "adding user"
     useradd -m "$username"
     echo "$username:$password" | chpasswd
     chown root:root "/home/$username"
@@ -31,8 +32,9 @@ if [ -n "$USER2" ]; then
     usermod -aG ssh -d /home "$username"    
 fi
 
-log "Starting sshd"
+echo "Starting sshd"
 exec /usr/sbin/sshd -D -e
+#/usr/sbin/sshd
 
 # -D Do not detach and become daemon.
 #  -e Write debug logs to standard error. This could be used for debugging.
