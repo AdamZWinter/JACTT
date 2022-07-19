@@ -165,7 +165,7 @@ resource "azurerm_network_profile" "containergroup_profile" {
 }
 
 data "azurerm_container_registry" "acr" {
-  name                = "ArcticaCR"
+  name                = "arctica"
   resource_group_name = "crrg"
 }
 
