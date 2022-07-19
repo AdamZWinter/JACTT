@@ -4,6 +4,7 @@ pipeline {
     environment {
         //TF_LOG='DEBUG'
         TF_LOG_PATH='/home/jenkins/terraform-debug.log'
+        //Keep these all in lowercase
         CONTAINER_REGISTRY='arcticacr'
         RESOURCE_GROUP='crrg'
         REPO='jact'
