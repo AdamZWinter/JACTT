@@ -10,15 +10,15 @@ pipeline {
         REPO='jactt'
         IMAGE_NAME='template'
         TAG='0.01'
-        CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
+        TF_VAR_container="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
         TF_VAR_networkpart='10.127'
     }
     
     stages {
         stage('build') {
             steps {
-                sh 'docker build -t ${CONTAINER} -f Dockerfile .'
-                sh 'echo built ${CONTAINER}'
+                sh 'docker build -t ${TF_VAR_container} -f Dockerfile .'
+                sh 'echo built ${TF_VAR_container}'
                 
                 withCredentials([
                     usernamePassword(credentialsId: 'sftpServicePrincipalCreds', passwordVariable: 'TF_VAR_clientsecret', usernameVariable: 'TF_VAR_clientid'),
@@ -41,14 +41,14 @@ pipeline {
                     //sh 'az account set -s $TF_VAR_subscriptionid'                                     //not necessary
                     //sh 'az acr login --name $CONTAINER_REGISTRY --resource-group $RESOURCE_GROUP'     //not necessary
                     sh 'az acr login --name $CONTAINER_REGISTRY'
-                    sh 'docker push ${CONTAINER}'
+                    sh 'docker push ${TF_VAR_container}'
                     sh 'az logout'
                     
                     sh 'terraform init'
                     sh 'terraform fmt'
                     sh 'terraform validate'
                     
-                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD -var container=$CONTAINER'
+                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD'
      
                     sh 'terraform show'
                     sh 'terraform state list'
