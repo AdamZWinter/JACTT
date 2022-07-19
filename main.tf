@@ -26,8 +26,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resourceTrackingNameRG" {
-  name     = "AzureJenkinsTerraformContainerTemplate"
-  location = "eastus2"
+  name     = "jactt"
+  location = "westus2"
 }
 
 # Create a virtual network within the resource group
