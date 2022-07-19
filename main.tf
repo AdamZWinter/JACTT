@@ -1,3 +1,8 @@
+#Change all Vnet setting here before any deployments.
+#While the 10.127.0.0/16 Vnet that is configured here will work,
+#It is meant to be something unlikely to conflict with a Vnet you already have,
+#In order to not conflict with this, you should change it now.
+
 # Configure the Azure provider
 terraform {
   required_providers {
@@ -21,26 +26,26 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resourceTrackingNameRG" {
-  name     = "sftpResourceGroupUSwest3"
+  name     = "AzureJenkinsTerraformContainerTemplate"
   location = "eastus2"
 }
 
 # Create a virtual network within the resource group
 resource "azurerm_virtual_network" "resourceTrackingNameVnet" {
-  name                = "sftpvnet"
+  name                = "templatevnet"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
-  address_space       = ["10.10.0.0/16"]
+  address_space       = ["10.127.0.0/16"]
 }
 
 resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
-  name                 = "sftptestsubnetone"
+  name                 = "templatesubnetone"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
-  address_prefixes     = ["10.10.1.0/24"]
+  address_prefixes     = ["10.127.1.0/24"]
 
   delegation {
-    name = "sftponesubnetdelegation"
+    name = "subnetonedelegation"
 
     service_delegation {
       name    = "Microsoft.ContainerInstance/containerGroups"
@@ -49,14 +54,14 @@ resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
 }
 
 resource "azurerm_subnet" "resourceTrackingNameSubnetzero" {
-  name                 = "sftptestsubnetzero"
+  name                 = "templatesubnetzero"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
-  address_prefixes     = ["10.10.0.0/24"]
+  address_prefixes     = ["10.127.0.0/24"]
 }
 
 resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
-  name                = "sftptestpublicip"
+  name                = "templatepublicip"
   sku                 = "Standard"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
@@ -68,41 +73,48 @@ resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
 }
 
 resource "azurerm_lb" "resourceTrackingNameTestLB" {
-  name                = "sftptestloadbalancer"
+  name                = "templateloadbalancer"
   sku                 = "Standard"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
 
   frontend_ip_configuration {
-    name                 = "sftptestFEIPConfig4LB"
+    name                 = "templateFEIPConfig4LB"
     public_ip_address_id = azurerm_public_ip.resourceTrackingNamePublicIPone.id
   } 
 }
 
 resource "azurerm_lb_backend_address_pool" "resourceTrackingNameTestLBBEpool" {
   loadbalancer_id = azurerm_lb.resourceTrackingNameTestLB.id
-  name            = "sftptestBackEndAddressPool"
+  name            = "templateBackEndAddressPool"
+}
+
+resource "azurerm_lb_backend_address_pool_address" "poolAddressOne" {
+  name                    = "PoolAddressOne"
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  ip_address              = "10.127.1.1"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressTwo" {
   name                    = "PoolAddressTwo"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.10.1.2"
+  ip_address              = "10.127.1.2"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressThree" {
   name                    = "PoolAddressThree"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.10.1.3"
+  ip_address              = "10.127.1.3"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressFour" {
   name                    = "PoolAddressFour"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.10.1.4"
+  ip_address              = "10.127.1.4"
 }
 
 resource "azurerm_lb_probe" "sshprobe" {
@@ -118,7 +130,7 @@ resource "azurerm_lb_rule" "loadBalancerRule" {
   protocol                       = "Tcp"
   frontend_port                  = 22
   backend_port                   = 22
-  frontend_ip_configuration_name = "sftptestFEIPConfig4LB"
+  frontend_ip_configuration_name = "templateFEIPConfig4LB"
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id]
   probe_id                       = azurerm_lb_probe.sshprobe.id
 }
@@ -144,7 +156,7 @@ data "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_container_group" "resourceTrackingNameContainer" {
-  name                = "sftptestcontainer"
+  name                = "templatecontainer"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
   ip_address_type     = "Private"
@@ -168,11 +180,8 @@ resource "azurerm_container_group" "resourceTrackingNameContainer" {
     }
     
     environment_variables = {
-      "VSS_USER" : "adam:${var.testpassword}"
-      "EO_USER"  : "dummy1:${var.testpassword}"
-      "MNS_USER" : "dummy2:${var.testpassword}"
-      "KNN_USER" : "dummy3:${var.testpassword}"
-      "CM_USER"  : "dummy4:${var.testpassword}"
+      "USER1" : "adam:${var.testpassword}"
+      "USER2" : "dummy1:${var.testpassword}"
     }
   }
   
