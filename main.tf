@@ -35,14 +35,14 @@ resource "azurerm_virtual_network" "resourceTrackingNameVnet" {
   name                = "templatevnet"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
-  address_space       = ["10.127.0.0/16"]
+  address_space       = ["${var.networkpart}.0.0/16"]
 }
 
 resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
   name                 = "templatesubnetone"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
-  address_prefixes     = ["10.127.1.0/24"]
+  address_prefixes     = ["${var.networkpart}.1.0/29"]
 
   delegation {
     name = "subnetonedelegation"
@@ -57,7 +57,7 @@ resource "azurerm_subnet" "resourceTrackingNameSubnetzero" {
   name                 = "templatesubnetzero"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
-  address_prefixes     = ["10.127.0.0/24"]
+  address_prefixes     = ["${var.networkpart}.0.0/24"]
 }
 
 resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
@@ -93,28 +93,42 @@ resource "azurerm_lb_backend_address_pool_address" "poolAddressOne" {
   name                    = "PoolAddressOne"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.127.1.1"
+  ip_address              = "${var.networkpart}.1.1"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressTwo" {
   name                    = "PoolAddressTwo"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.127.1.2"
+  ip_address              = "${var.networkpart}.1.2"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressThree" {
   name                    = "PoolAddressThree"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.127.1.3"
+  ip_address              = "${var.networkpart}.1.3"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "poolAddressFour" {
   name                    = "PoolAddressFour"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
-  ip_address              = "10.127.1.4"
+  ip_address              = "${var.networkpart}.1.4"
+}
+
+resource "azurerm_lb_backend_address_pool_address" "poolAddressFive" {
+  name                    = "PoolAddressFive"
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  ip_address              = "${var.networkpart}.1.5"
+}
+
+resource "azurerm_lb_backend_address_pool_address" "poolAddressSix" {
+  name                    = "PoolAddressSix"
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  ip_address              = "${var.networkpart}.1.6"
 }
 
 resource "azurerm_lb_probe" "sshprobe" {

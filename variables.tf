@@ -32,3 +32,8 @@ variable "container" {
   description = "container tag"
   type        = string
 }
+
+variable "networkpart" {
+  description = "network part of vnet"
+  type        = string
+}

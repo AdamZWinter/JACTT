@@ -6,11 +6,12 @@ pipeline {
         TF_LOG_PATH='/home/jenkins/terraform-debug.log'
         //Keep these all in lowercase
         CONTAINER_REGISTRY='arcticacr'
-        RESOURCE_GROUP='crrg'
-        REPO='jact'
+        RESOURCE_GROUP='jactt'
+        REPO='jactt'
         IMAGE_NAME='template'
         TAG='0.01'
-        CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
+        CONTAINER='${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}'
+        NETWORKPART='10.127'
     }
     
     stages {
@@ -47,7 +48,7 @@ pipeline {
                     sh 'terraform fmt'
                     sh 'terraform validate'
                     
-                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD -var container=$CONTAINER'
+                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD -var container=$CONTAINER -var networkpart=$NETWORKPART'
      
                     sh 'terraform show'
                     sh 'terraform state list'
