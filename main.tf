@@ -25,20 +25,20 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_resource_group" "resourceTrackingNameRG" {
+resource "azurerm_resource_group" "RG${var.uniquestate}" {
   name     = "jactt"
   location = "westus2"
 }
 
 # Create a virtual network within the resource group
-resource "azurerm_virtual_network" "resourceTrackingNameVnet" {
+resource "azurerm_virtual_network" "Vnet${var.uniquestate}" {
   name                = "templatevnet"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
   address_space       = ["${var.networkpart}.0.0/16"]
 }
 
-resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
+resource "azurerm_subnet" "Subnetone${var.uniquestate}" {
   name                 = "templatesubnetone"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
@@ -53,14 +53,14 @@ resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
   }
 }
 
-resource "azurerm_subnet" "resourceTrackingNameSubnetzero" {
+resource "azurerm_subnet" "Subnetzero${var.uniquestate}" {
   name                 = "templatesubnetzero"
   resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
   virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
   address_prefixes     = ["${var.networkpart}.0.0/24"]
 }
 
-resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
+resource "azurerm_public_ip" "PublicIP${var.uniquestate}" {
   name                = "templatepublicip"
   sku                 = "Standard"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
@@ -72,7 +72,7 @@ resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
   }
 }
 
-resource "azurerm_lb" "resourceTrackingNameTestLB" {
+resource "azurerm_lb" "LB${var.uniquestate}" {
   name                = "templateloadbalancer"
   sku                 = "Standard"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
@@ -84,61 +84,61 @@ resource "azurerm_lb" "resourceTrackingNameTestLB" {
   } 
 }
 
-resource "azurerm_lb_backend_address_pool" "resourceTrackingNameTestLBBEpool" {
+resource "azurerm_lb_backend_address_pool" "LBBEpool${var.uniquestate}" {
   loadbalancer_id = azurerm_lb.resourceTrackingNameTestLB.id
   name            = "templateBackEndAddressPool"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressOne" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressOne${var.uniquestate}" {
   name                    = "PoolAddressOne"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.1"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressTwo" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressTwo${var.uniquestate}" {
   name                    = "PoolAddressTwo"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.2"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressThree" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressThree${var.uniquestate}" {
   name                    = "PoolAddressThree"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.3"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressFour" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressFour${var.uniquestate}" {
   name                    = "PoolAddressFour"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.4"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressFive" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressFive${var.uniquestate}" {
   name                    = "PoolAddressFive"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.5"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressSix" {
+resource "azurerm_lb_backend_address_pool_address" "poolAddressSix${var.uniquestate}" {
   name                    = "PoolAddressSix"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
   virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
   ip_address              = "${var.networkpart}.1.6"
 }
 
-resource "azurerm_lb_probe" "sshprobe" {
+resource "azurerm_lb_probe" "sshprobe${var.uniquestate}" {
   loadbalancer_id         = azurerm_lb.resourceTrackingNameTestLB.id
   name                    = "ssh-running-probe"
   port                    = 22
   interval_in_seconds     = 30
 }
 
-resource "azurerm_lb_rule" "loadBalancerRule" {
+resource "azurerm_lb_rule" "loadBalancerRule${var.uniquestate}" {
   loadbalancer_id                = azurerm_lb.resourceTrackingNameTestLB.id
   name                           = "LBRule22"
   protocol                       = "Tcp"
@@ -149,7 +149,7 @@ resource "azurerm_lb_rule" "loadBalancerRule" {
   probe_id                       = azurerm_lb_probe.sshprobe.id
 }
 
-resource "azurerm_network_profile" "containergroup_profile" {
+resource "azurerm_network_profile" "containergroup_profile${var.uniquestate}" {
   name                = "acg-profile"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location
@@ -169,7 +169,7 @@ data "azurerm_container_registry" "acr" {
   resource_group_name = "crrg"
 }
 
-resource "azurerm_container_group" "resourceTrackingNameContainer" {
+resource "azurerm_container_group" "Container${var.uniquestate}" {
   name                = "templatecontainer"
   resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
   location            = azurerm_resource_group.resourceTrackingNameRG.location

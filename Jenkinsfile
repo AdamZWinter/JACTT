@@ -12,6 +12,7 @@ pipeline {
         TAG='0.01'
         CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
         NETWORKPART='10.127'
+        TF_VAR_uniquestate='v001'  //change this when the resource group has been removed and renamed
     }
     
     stages {
