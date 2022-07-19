@@ -37,8 +37,3 @@ variable "networkpart" {
   description = "network part of vnet"
   type        = string
 }
-
-variable "uniquestate" {
-  description = "Creates unique state / resource tracking variables for terraform"
-  type        = string
-}

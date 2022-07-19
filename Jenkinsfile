@@ -11,8 +11,7 @@ pipeline {
         IMAGE_NAME='template'
         TAG='0.01'
         CONTAINER="${CONTAINER_REGISTRY}.azurecr.io/${REPO}/${IMAGE_NAME}:${TAG}"
-        NETWORKPART='10.127'
-        TF_VAR_uniquestate='v001'  //resource tracking name is not allowed to use this template variable
+        TF_VAR_NETWORKPART='10.127'
     }
     
     stages {
@@ -49,7 +48,7 @@ pipeline {
                     sh 'terraform fmt'
                     sh 'terraform validate'
                     
-                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD -var container=$CONTAINER -var networkpart=$NETWORKPART'
+                    sh 'terraform apply -auto-approve -no-color -var testpassword=$TEST_PASSWORD -var container=$CONTAINER'
      
                     sh 'terraform show'
                     sh 'terraform state list'
