@@ -1,5 +1,5 @@
 #Change all Vnet setting here before any deployments.
-#While the 10.127.0.0/16 Vnet that is configured here will work,
+#While the 10.127.0.0/16 Vnet that is default here will work,
 #It is meant to be something unlikely to conflict with a Vnet you already have,
 #In order to not conflict with this, you should change it now.
 
@@ -35,21 +35,21 @@ resource "azurerm_resource_group" "RTNjact2022731_RG" {
 }
 
 # Create a virtual network within the resource group
-resource "azurerm_virtual_network" "RTNjact2022731_Vnet" {
+resource "azurerm_virtual_network" "RTNjact2022731_vnet" {
   name                = "jact2022731_vnet"
   resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
   location            = azurerm_resource_group.RTNjact2022731_RG.location
   address_space       = ["${var.networkpart}.0.0/16"]
 }
 
-resource "azurerm_subnet" "RTNjact2022731_Subnetzero" {
+resource "azurerm_subnet" "RTNjact2022731_subnetzero" {
   name                 = "jact2022731_subnetzero"
   resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
   virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
   address_prefixes     = ["${var.networkpart}.0.0/24"]
 }
 
-resource "azurerm_subnet" "RTNjact2022731_Subnetone" {
+resource "azurerm_subnet" "RTNjact2022731_subnetone" {
   name                 = "jact2022731_subnetone"
   resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
   virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
