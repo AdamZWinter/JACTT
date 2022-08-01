@@ -3,6 +3,10 @@
 #It is meant to be something unlikely to conflict with a Vnet you already have,
 #In order to not conflict with this, you should change it now.
 
+#RTN = Resource Tracking Name
+# The trailing code should be made unique for each project
+#RTNcode: RTNjact2022731
+
 # Configure the Azure provider
 terraform {
   required_providers {
@@ -25,27 +29,34 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_resource_group" "resourceTrackingNameRG" {
-  name     = "jactt"
+resource "azurerm_resource_group" "RTNjact2022731_RG" {
+  name     = "jact2022731"
   location = "westus2"
 }
 
 # Create a virtual network within the resource group
-resource "azurerm_virtual_network" "resourceTrackingNameVnet" {
-  name                = "templatevnet"
-  resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
-  location            = azurerm_resource_group.resourceTrackingNameRG.location
+resource "azurerm_virtual_network" "RTNjact2022731_Vnet" {
+  name                = "jact2022731_vnet"
+  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+  location            = azurerm_resource_group.RTNjact2022731_RG.location
   address_space       = ["${var.networkpart}.0.0/16"]
 }
 
-resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
-  name                 = "templatesubnetone"
-  resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
-  virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
+resource "azurerm_subnet" "RTNjact2022731_Subnetzero" {
+  name                 = "jact2022731_subnetzero"
+  resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
+  virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
+  address_prefixes     = ["${var.networkpart}.0.0/24"]
+}
+
+resource "azurerm_subnet" "RTNjact2022731_Subnetone" {
+  name                 = "jact2022731_subnetone"
+  resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
+  virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
   address_prefixes     = ["${var.networkpart}.1.0/29"]
 
   delegation {
-    name = "subnetonedelegation"
+    name = "subnetone_delegation"
 
     service_delegation {
       name    = "Microsoft.ContainerInstance/containerGroups"
@@ -53,18 +64,11 @@ resource "azurerm_subnet" "resourceTrackingNameSubnetone" {
   }
 }
 
-resource "azurerm_subnet" "resourceTrackingNameSubnetzero" {
-  name                 = "templatesubnetzero"
-  resource_group_name  = azurerm_resource_group.resourceTrackingNameRG.name
-  virtual_network_name = azurerm_virtual_network.resourceTrackingNameVnet.name
-  address_prefixes     = ["${var.networkpart}.0.0/24"]
-}
-
-resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
-  name                = "templatepublicip"
+resource "azurerm_public_ip" "RTNjact2022731_PublicIPone" {
+  name                = "jact2022731_publicip"
   sku                 = "Standard"
-  resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
-  location            = azurerm_resource_group.resourceTrackingNameRG.location
+  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+  location            = azurerm_resource_group.RTNjact2022731_RG.location
   allocation_method   = "Static"
 
   tags = {
@@ -72,94 +76,94 @@ resource "azurerm_public_ip" "resourceTrackingNamePublicIPone" {
   }
 }
 
-resource "azurerm_lb" "resourceTrackingNameTestLB" {
-  name                = "templateloadbalancer"
+resource "azurerm_lb" "RTNjact2022731_LB" {
+  name                = "jact2022731_loadbalancer"
   sku                 = "Standard"
-  resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
-  location            = azurerm_resource_group.resourceTrackingNameRG.location
+  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+  location            = azurerm_resource_group.RTNjact2022731_RG.location
 
   frontend_ip_configuration {
-    name                 = "templateFEIPConfig4LB"
-    public_ip_address_id = azurerm_public_ip.resourceTrackingNamePublicIPone.id
+    name                 = "jact202273_FEIPConfig4LB"
+    public_ip_address_id = azurerm_public_ip.RTNjact2022731_PublicIPone.id
   } 
 }
 
-resource "azurerm_lb_backend_address_pool" "resourceTrackingNameTestLBBEpool" {
-  loadbalancer_id = azurerm_lb.resourceTrackingNameTestLB.id
-  name            = "templateBackEndAddressPool"
+resource "azurerm_lb_backend_address_pool" "RTNjact2022731_LBBEpool" {
+  loadbalancer_id = azurerm_lb.RTNjact2022731_LB.id
+  name            = "jact2022731_BackEndAddressPool"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressOne" {
+resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressOne" {
   name                    = "PoolAddressOne"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.1"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressTwo" {
+resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressTwo" {
   name                    = "PoolAddressTwo"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.2"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressThree" {
+resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressThree" {
   name                    = "PoolAddressThree"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.3"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressFour" {
+resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFour" {
   name                    = "PoolAddressFour"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.4"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressFive" {
+resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFive" {
   name                    = "PoolAddressFive"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.5"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "poolAddressSix" {
+resource "azurerm_lb_backend_address_pool_address" RTNjact2022731_poolAddressSix" {
   name                    = "PoolAddressSix"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.resourceTrackingNameVnet.id
+  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
   ip_address              = "${var.networkpart}.1.6"
 }
 
-resource "azurerm_lb_probe" "sshprobe" {
-  loadbalancer_id         = azurerm_lb.resourceTrackingNameTestLB.id
+resource "azurerm_lb_probe" "RTNjact2022731_sshprobe" {
+  loadbalancer_id         = azurerm_lb.RTNjact2022731_LB.id
   name                    = "ssh-running-probe"
   port                    = 22
   interval_in_seconds     = 30
 }
 
-resource "azurerm_lb_rule" "loadBalancerRule" {
-  loadbalancer_id                = azurerm_lb.resourceTrackingNameTestLB.id
+resource "azurerm_lb_rule" "RTNjact2022731_loadBalancerRule" {
+  loadbalancer_id                = azurerm_lb.RTNjact2022731_LB.id
   name                           = "LBRule22"
   protocol                       = "Tcp"
   frontend_port                  = 22
   backend_port                   = 22
   frontend_ip_configuration_name = "templateFEIPConfig4LB"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.resourceTrackingNameTestLBBEpool.id]
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id]
   probe_id                       = azurerm_lb_probe.sshprobe.id
 }
 
-resource "azurerm_network_profile" "containergroup_profile" {
+resource "azurerm_network_profile" "RTNjact2022731_containergroup_profile" {
   name                = "acg-profile"
-  resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
-  location            = azurerm_resource_group.resourceTrackingNameRG.location
+  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+  location            = azurerm_resource_group.RTNjact2022731_RG.location
 
   container_network_interface {
     name = "acg-nic"
 
     ip_configuration {
       name      = "aciipconfig"
-      subnet_id = azurerm_subnet.resourceTrackingNameSubnetone.id
+      subnet_id = azurerm_subnet.RTNjact2022731_Subnetone.id
     }
   }
 }
@@ -169,13 +173,13 @@ data "azurerm_container_registry" "acr" {
   resource_group_name = "crrg"
 }
 
-resource "azurerm_container_group" "resourceTrackingNameContainer" {
-  name                = "templatecontainer"
-  resource_group_name = azurerm_resource_group.resourceTrackingNameRG.name
-  location            = azurerm_resource_group.resourceTrackingNameRG.location
+resource "azurerm_container_group" "RTNjact2022731_Container" {
+  name                = "jact2022731_container"
+  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+  location            = azurerm_resource_group.RTNjact2022731_RG.location
   ip_address_type     = "Private"
   os_type             = "Linux"
-  network_profile_id  = azurerm_network_profile.containergroup_profile.id
+  network_profile_id  = azurerm_network_profile.RTNjact2022731_containergroup_profile.id
   image_registry_credential {
     username = data.azurerm_container_registry.acr.admin_username
     password = data.azurerm_container_registry.acr.admin_password
