@@ -163,7 +163,7 @@ resource "azurerm_network_profile" "RTNjact2022731_containergroup_profile" {
 
     ip_configuration {
       name      = "aciipconfig"
-      subnet_id = azurerm_subnet.RTNjact2022731_Subnetone.id
+      subnet_id = azurerm_subnet.RTNjact2022731_subnetone.id
     }
   }
 }
