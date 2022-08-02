@@ -1,6 +1,6 @@
-#Change all Vnet setting here before any deployments.
-#While the 10.127.0.0/16 Vnet that is default here will work,
-#It is meant to be something unlikely to conflict with a Vnet you already have,
+#Change all vnet setting here before any deployments.
+#While the 10.127.0.0/16 vnet that is default here will work,
+#It is meant to be something unlikely to conflict with a vnet you already have,
 #In order to not conflict with this, you should change it now.
 
 #RTN = Resource Tracking Name
@@ -45,14 +45,14 @@ resource "azurerm_virtual_network" "RTNjact2022731_vnet" {
 resource "azurerm_subnet" "RTNjact2022731_subnetzero" {
   name                 = "jact2022731_subnetzero"
   resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
-  virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
+  virtual_network_name = azurerm_virtual_network.RTNjact2022731_vnet.name
   address_prefixes     = ["${var.networkpart}.0.0/24"]
 }
 
 resource "azurerm_subnet" "RTNjact2022731_subnetone" {
   name                 = "jact2022731_subnetone"
   resource_group_name  = azurerm_resource_group.RTNjact2022731_RG.name
-  virtual_network_name = azurerm_virtual_network.RTNjact2022731_Vnet.name
+  virtual_network_name = azurerm_virtual_network.RTNjact2022731_vnet.name
   address_prefixes     = ["${var.networkpart}.1.0/29"]
 
   delegation {
@@ -96,42 +96,42 @@ resource "azurerm_lb_backend_address_pool" "RTNjact2022731_LBBEpool" {
 resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressOne" {
   name                    = "PoolAddressOne"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.1"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressTwo" {
   name                    = "PoolAddressTwo"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.2"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressThree" {
   name                    = "PoolAddressThree"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.3"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFour" {
   name                    = "PoolAddressFour"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.4"
 }
 
 resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFive" {
   name                    = "PoolAddressFive"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.5"
 }
 
 resource "azurerm_lb_backend_address_pool_address" RTNjact2022731_poolAddressSix" {
   name                    = "PoolAddressSix"
   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_vnet.id
   ip_address              = "${var.networkpart}.1.6"
 }
 
