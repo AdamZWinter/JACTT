@@ -64,94 +64,94 @@ resource "azurerm_subnet" "RTNjact2022731_subnetone" {
   }
 }
 
-resource "azurerm_public_ip" "RTNjact2022731_PublicIPone" {
-  name                = "jact2022731_publicip"
-  sku                 = "Standard"
-  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
-  location            = azurerm_resource_group.RTNjact2022731_RG.location
-  allocation_method   = "Static"
+# resource "azurerm_public_ip" "RTNjact2022731_PublicIPone" {
+#   name                = "jact2022731_publicip"
+#   sku                 = "Standard"
+#   resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+#   location            = azurerm_resource_group.RTNjact2022731_RG.location
+#   allocation_method   = "Static"
 
-  tags = {
-    environment = "test"
-  }
-}
+#   tags = {
+#     environment = "test"
+#   }
+# }
 
-resource "azurerm_lb" "RTNjact2022731_LB" {
-  name                = "jact2022731_loadbalancer"
-  sku                 = "Standard"
-  resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
-  location            = azurerm_resource_group.RTNjact2022731_RG.location
+# resource "azurerm_lb" "RTNjact2022731_LB" {
+#   name                = "jact2022731_loadbalancer"
+#   sku                 = "Standard"
+#   resource_group_name = azurerm_resource_group.RTNjact2022731_RG.name
+#   location            = azurerm_resource_group.RTNjact2022731_RG.location
 
-  frontend_ip_configuration {
-    name                 = "jact202273_FEIPConfig4LB"
-    public_ip_address_id = azurerm_public_ip.RTNjact2022731_PublicIPone.id
-  } 
-}
+#   frontend_ip_configuration {
+#     name                 = "jact202273_FEIPConfig4LB"
+#     public_ip_address_id = azurerm_public_ip.RTNjact2022731_PublicIPone.id
+#   } 
+# }
 
-resource "azurerm_lb_backend_address_pool" "RTNjact2022731_LBBEpool" {
-  loadbalancer_id = azurerm_lb.RTNjact2022731_LB.id
-  name            = "jact2022731_BackEndAddressPool"
-}
+# resource "azurerm_lb_backend_address_pool" "RTNjact2022731_LBBEpool" {
+#   loadbalancer_id = azurerm_lb.RTNjact2022731_LB.id
+#   name            = "jact2022731_BackEndAddressPool"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressOne" {
-  name                    = "PoolAddressOne"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.1"
-}
+# resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressOne" {
+#   name                    = "PoolAddressOne"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.1"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressTwo" {
-  name                    = "PoolAddressTwo"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.2"
-}
+# resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressTwo" {
+#   name                    = "PoolAddressTwo"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.2"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressThree" {
-  name                    = "PoolAddressThree"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.3"
-}
+# resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressThree" {
+#   name                    = "PoolAddressThree"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.3"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFour" {
-  name                    = "PoolAddressFour"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.4"
-}
+# resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFour" {
+#   name                    = "PoolAddressFour"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.4"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFive" {
-  name                    = "PoolAddressFive"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.5"
-}
+# resource "azurerm_lb_backend_address_pool_address" "RTNjact2022731_poolAddressFive" {
+#   name                    = "PoolAddressFive"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.5"
+# }
 
-resource "azurerm_lb_backend_address_pool_address" RTNjact2022731_poolAddressSix" {
-  name                    = "PoolAddressSix"
-  backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
-  virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
-  ip_address              = "${var.networkpart}.1.6"
-}
+# resource "azurerm_lb_backend_address_pool_address" RTNjact2022731_poolAddressSix" {
+#   name                    = "PoolAddressSix"
+#   backend_address_pool_id = resource.azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id
+#   virtual_network_id      = resource.azurerm_virtual_network.RTNjact2022731_Vnet.id
+#   ip_address              = "${var.networkpart}.1.6"
+# }
 
-resource "azurerm_lb_probe" "RTNjact2022731_sshprobe" {
-  loadbalancer_id         = azurerm_lb.RTNjact2022731_LB.id
-  name                    = "ssh-running-probe"
-  port                    = 22
-  interval_in_seconds     = 30
-}
+# resource "azurerm_lb_probe" "RTNjact2022731_sshprobe" {
+#   loadbalancer_id         = azurerm_lb.RTNjact2022731_LB.id
+#   name                    = "ssh-running-probe"
+#   port                    = 22
+#   interval_in_seconds     = 30
+# }
 
-resource "azurerm_lb_rule" "RTNjact2022731_loadBalancerRule" {
-  loadbalancer_id                = azurerm_lb.RTNjact2022731_LB.id
-  name                           = "LBRule22"
-  protocol                       = "Tcp"
-  frontend_port                  = 22
-  backend_port                   = 22
-  frontend_ip_configuration_name = "templateFEIPConfig4LB"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id]
-  probe_id                       = azurerm_lb_probe.sshprobe.id
-}
+# resource "azurerm_lb_rule" "RTNjact2022731_loadBalancerRule" {
+#   loadbalancer_id                = azurerm_lb.RTNjact2022731_LB.id
+#   name                           = "LBRule22"
+#   protocol                       = "Tcp"
+#   frontend_port                  = 22
+#   backend_port                   = 22
+#   frontend_ip_configuration_name = "templateFEIPConfig4LB"
+#   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.RTNjact2022731_LBBEpool.id]
+#   probe_id                       = azurerm_lb_probe.sshprobe.id
+# }
 
 resource "azurerm_network_profile" "RTNjact2022731_containergroup_profile" {
   name                = "acg-profile"
